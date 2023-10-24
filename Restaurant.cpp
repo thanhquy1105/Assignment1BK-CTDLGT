@@ -252,8 +252,17 @@ class imp_res : public Restaurant
                         if (compare == from->prev) check = true;
                     } while (y!=increase);
 
+                    if (compare==nullptr) return;
+
+                    bool equalSwap = false;
+                    if (abs(j->energy) == abs(compare->energy)) {
+                        if (j->name[j->name.length()-1] < compare->name[compare->name.length()-1]) {
+                            equalSwap = true;
+                        }
+                    }
+
                     // if (j >= incr) && (arr[j] > arr[j-incr]) {
-                    if (compare!=nullptr  && abs(j->energy) >= abs(compare->energy)) {
+                    if (equalSwap||abs(j->energy) > abs(compare->energy)) {
                         if (compare == from) {
                             from = j;
                         } else if (j == from) {
@@ -284,8 +293,8 @@ class imp_res : public Restaurant
 		{
 			cout << "purple"<< endl;
             if (queue == nullptr) return ;
-            int max = abs(queue->energy),x=1,posMax = 1;
-            customer*cur = queue->next,*maxAbs = queue;
+            int max = 0,x=1,posMax = 1;
+            customer*cur = queue,*maxAbs = queue;
             while (cur != nullptr) {
                 x++;
                 if (abs(cur->energy) >= max) {
@@ -293,6 +302,7 @@ class imp_res : public Restaurant
                     maxAbs = cur;
                     posMax = x;
                 }
+                cur->name = cur->name + to_string(x);
                 cur = cur->next;
             }
             cout << posMax << endl; 
@@ -319,7 +329,13 @@ class imp_res : public Restaurant
 
             cout << "TIme swap        "<<timeSwap<<endl;
             PRINT();
-
+            cur = queue;
+            while (cur !=nullptr)
+            {
+                cur->name.pop_back();
+                cur = cur->next;
+            }
+            
             // BLUE(timeSwap%MAXSIZE);
 		}
 		
