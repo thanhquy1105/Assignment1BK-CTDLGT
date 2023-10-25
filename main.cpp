@@ -55,7 +55,6 @@ int main(int argc, char* argv[]) {
 	imp_res* r = new imp_res();
 	string fileName = "test.txt";
     simulate(fileName, r);
-	r->PRINT();
   	delete r;
 	return 0;
 }

@@ -28,10 +28,6 @@ class imp_res : public Restaurant
                 deleteCustomerAtTable(rtable);
 
             }
-            cout<<"ENDDDD"<<endl;
-            PRINT();
-            cout<<"ENDDDD"<<endl;
-
             
         };
 
@@ -69,15 +65,10 @@ class imp_res : public Restaurant
             return;
         }
 
-        int abs(int i) {
-            if (i<0) return -i;
-            return i;
-        }
-
 		void RED(string name, int energy)
 		{
 			if (energy == 0) return;
-			cout << name << " " << energy << endl;
+			cout <<"RED: " << name << " " << energy << endl;
             // nil table
 			if (rtable == nullptr && tableSize < MAXSIZE) {
 			    customer *cus = new customer (name, energy, nullptr, nullptr);
@@ -180,12 +171,12 @@ class imp_res : public Restaurant
                 }
                 queueSize++;
             }
-            PRINT();
+            
 		}
 		
         void BLUE(int num)
 		{
-			cout << "blue " << num << endl;
+			cout << "BLUE " << num << endl;
 			int i=0;
             while (i<num &&order !=nullptr) {
                 customer *customerAtTable = order->prev;
@@ -202,16 +193,8 @@ class imp_res : public Restaurant
                 PopQueue();
                 RED(name, energy);
             }
-            PRINT();
-		}
-
-        // Shell sort
-        int shellSortQueue(customer*begin, customer*end) {
-            // Rearrange elements at each n/2, n/4, n/8, ... intervals
-            if (begin ==nullptr || end == nullptr) return 0;
             
-        }
-
+		}
 
         void swapQueue(customer* cus1, customer *cus2) { // vi tri i < vi tri cus2
             if (cus1 == cus2 ) return;
@@ -291,7 +274,7 @@ class imp_res : public Restaurant
 
 		void PURPLE()
 		{
-			cout << "purple"<< endl;
+			cout << "PURPLE"<< endl;
             if (queue == nullptr) return ;
             int max = 0,x=1,posMax = 1;
             customer*cur = queue,*maxAbs = queue;
@@ -305,9 +288,18 @@ class imp_res : public Restaurant
                 cur->name = cur->name + to_string(x);
                 cur = cur->next;
             }
-            cout << posMax << endl; 
-            cout << "(" << maxAbs->name << "," << maxAbs->energy << ")" << endl; 
-
+            cout << "POS OF ABS MAX: " << posMax << endl; 
+            cout << "ABS MAS: (" << maxAbs->name << "," << maxAbs->energy << ")" << endl; 
+            if (maxAbs == queue) {
+                cur = queue;
+                while (cur !=nullptr)
+                {
+                    cur->name.pop_back();
+                    cur = cur->next;
+                }
+                
+                return;
+            }
             int timeSwap = 0;
             // ToDO: shell sort from queue to maxAbs
             for(int i=posMax/2;i>2;i/=2) {
@@ -327,8 +319,8 @@ class imp_res : public Restaurant
 
             insort(queue->next,&maxAbs,1,&timeSwap);
 
-            cout << "TIme swap        "<<timeSwap<<endl;
-            PRINT();
+            cout << "SWAP TIMES: "<<timeSwap<<endl;
+            
             cur = queue;
             while (cur !=nullptr)
             {
@@ -336,7 +328,7 @@ class imp_res : public Restaurant
                 cur = cur->next;
             }
             
-            // BLUE(timeSwap%MAXSIZE);
+            BLUE(timeSwap%MAXSIZE);
 		}
 		
          void swapRTable(customer* i, customer *j) { // vi tri i < vi tri j
@@ -375,10 +367,10 @@ class imp_res : public Restaurant
 
         void REVERSAL()
 		{
-			cout << "reversal" << endl;
+			cout << "REVERSAL" << endl;
             if (posOfChange == nullptr) return;
-            PRINT();
-            cout << "(" << posOfChange->name << "," << posOfChange->energy << ")" <<endl; 
+            
+            cout << "XPOS: (" << posOfChange->name << "," << posOfChange->energy << ")" <<endl; 
             customer*currentLeft = posOfChange, *prev = posOfChange->next, 
                     *next = nullptr, *currentRight = posOfChange->next;
             bool swap = false, across = false;
@@ -432,10 +424,10 @@ class imp_res : public Restaurant
 		
         void UNLIMITED_VOID()
 		{
-			cout << "unlimited_void" << endl;
+			cout << "UNLIMITED_VOID" << endl;
             if (tableSize < 4) return;
-            cout <<"(" << posOfChange->name << "," << posOfChange->energy << ")" << endl;
-            customer*current = posOfChange,*min;
+            cout <<"XPOS: (" << posOfChange->name << "," << posOfChange->energy << ")" << endl;
+            customer*current = posOfChange;
             struct {
                 int sum =INT_MAX;
                 customer*begin = nullptr;
@@ -445,7 +437,7 @@ class imp_res : public Restaurant
             
             do {
                 customer*temp = current;
-                min= current;
+                customer*min= current;
                 int i=1,sum = 0;
                 do {
                     if (min->energy > temp->energy) min = temp;
@@ -461,10 +453,10 @@ class imp_res : public Restaurant
                 }while (temp != current);
                 current = current->next;
             }while (current != posOfChange);
-            cout << res.sum << endl;
+            cout << "SUM: " << res.sum << endl;
             cout <<"MIN (" << res.min->name << "," << res.min->energy << ")" << endl;
-            cout <<"(" << res.begin->name << "," << res.begin->energy << ")" << "->";
-            cout <<"(" << res.end->name << "," << res.end->energy << ")" << endl<<endl;
+            cout <<"BEGIN: (" << res.begin->name << "," << res.begin->energy << ")" << "->";
+            cout <<"END: (" << res.end->name << "," << res.end->energy << ")" << endl<<endl;
 
             if (res.begin ==nullptr) return;
             current = res.min;
@@ -477,48 +469,6 @@ class imp_res : public Restaurant
             cout <<endl<<endl;
 		}
 
-        void UNLIMITED_VOID1()
-		{
-			cout << "unlimited_void" << endl;
-            if (tableSize < 4) return;
-            cout <<"(" << posOfChange->name << "," << posOfChange->energy << ")" << endl;
-            customer*current = posOfChange;
-            struct {
-                int sum = 0;
-                customer*begin = nullptr;
-                customer *end = nullptr;
-                customer *min = nullptr;
-            } res,res1,res2;
-            res1.sum = res2.sum = current->energy;
-            res1.begin = res2.begin = posOfChange;
-            res1.end = res2.end = posOfChange;
-            res1.min = res2.min = posOfChange;
-            int i=0,j=0;
-            
-            do {
-                if (res1.sum > current->energy)
-                
-                current = current->next;
-            }while (current != posOfChange);
-
-            if (j < 4) return;
-
-            cout << res2.sum << endl;
-            cout <<"MIN (" << res2.min->name << "," << res2.min->energy << ")" << endl;
-            cout <<"(" << res2.begin->name << "," << res2.begin->energy << ")" << "->";
-            cout <<"(" << res2.end->name << "," << res2.end->energy << ")" << endl<<endl;
-            
-            current = res2.min;
-            do {    
-                cout <<"(" << current->name << "," << current->energy << ")" << "->";
-                if (current == res2.end) {
-                    current = res2.begin;
-                }else current = current->next;
-            } while (current != res2.min);
-            cout <<endl<<endl;
-		}
-
-
         void addToStack(customer **stack, customer*cus) {
             if (*stack == nullptr) *stack = cus;
             else {
@@ -529,9 +479,7 @@ class imp_res : public Restaurant
 		
         void DOMAIN_EXPANSION()
 		{
-            cout << "domain_expansion" << endl;
-            PRINT();
-
+            cout << "DOMAIN_EXPANSION" << endl;
 			int sumPositive = 0, sumNegative = 0;
             customer* currentRT = rtable;
             if (currentRT == nullptr) { return;	}
@@ -556,7 +504,7 @@ class imp_res : public Restaurant
                 currentQueue = currentQueue->next; 
             }
 
-            cout << sumPositive << " "<< sumNegative<<endl;
+            cout << "Positive Sum: " << sumPositive << ". Negative Sum: "<< sumNegative<<endl;
             customer* stack1 = nullptr; 
             if (sumPositive >= abs(sumNegative)) {
                 customer* currentOrder = order;
@@ -673,7 +621,7 @@ class imp_res : public Restaurant
                     PopQueue();
                     RED(name, energy);
             }
-            PRINT();
+            
 		}
 
 		void LIGHT(int num)
@@ -706,35 +654,6 @@ class imp_res : public Restaurant
                 }
             } 
 		}
-        
-        void PRINT(){
-            customer*current = rtable;
-            cout << "Round Table:" << tableSize <<endl;
-            if (rtable != nullptr) {
-                do {
-                    cout << "(" << current->name << "," << current->energy << ")" << "->"; 
-                    current = current->next;
-                }while(current != rtable);
-            }
-
-            cout << endl;
-            cout << "Queue:" << queueSize <<endl;
-            current = queue;
-            while (current !=nullptr) {
-                cout << "(" << current->name << "," << current->energy << ")" << "->"; 
-                current = current->next;
-            }
-            cout << endl;
-
-            cout << "Order:" <<endl;
-            current = order;
-            while (current !=nullptr) {
-                cout << "(" << current->name << "," << current->energy << ")" << "->"; 
-                current = current->next;
-            }
-            cout << endl;
-            cout << endl;
-        }
 };
 
 
@@ -753,17 +672,16 @@ class imp_res : public Restaurant
 // RED GGG -34
 // RED RWE -342
 // RED QWQ 934
-// RED FSSD 934
+// RED FSSD 23
+// RED FGD -54
+// RED FYD -174
+// RED TSD 84
 
-// BLUE 2
-// BLUE 2
 // PURPLE
 // REVERSAL
 // UNLIMITED_VOID
 // DOMAIN_EXPANSION
 // LIGHT 3
-
-
 
 // MAXSIZE 8
 // RED BCD 14
@@ -795,71 +713,26 @@ class imp_res : public Restaurant
 // PURPLE
 
 
-// void REVERSAL()
-// 		{
-// 			cout << "reversal" << endl;
-//             if (posOfChange == nullptr) return;
-//             PRINT();
-//             cout << "(" << posOfChange->name << "," << posOfChange->energy << ")" <<endl; 
-//             customer*currentLeft = posOfChange, *prev = posOfChange->next, 
-//                     *next = nullptr, *currentRight = posOfChange->next;
-//             bool check = false;
-//             do {
-//                 next = currentLeft->prev;
-//                 if (currentRight == next) check =true;
-//                 if (next->energy * posOfChange->energy > 0 || check == true) {
-//                     currentLeft->next = next;
-//                     currentLeft->prev = prev;
-//                     prev = currentLeft;
-//                     currentLeft = next;
-//                 }else {
-//                     while (currentRight->energy *posOfChange->energy > 0) {
-//                         currentRight = currentRight->next;
-//                         if (currentRight == next) {
-//                             check =true;
-//                             break;
-//                         }
-//                     }
-//                     if  (next->prev == currentRight && currentRight->next == next){
-//                         customer *prevCurRight = currentRight->prev;
-//                         next->next = currentRight;
-//                         next->prev = prevCurRight;
-//                         if (prevCurRight == posOfChange) {
-//                             prevCurRight->prev = next;
-//                         }else {
-//                             prevCurRight->next = next;
-//                         }
-//                         currentRight->next = currentLeft;
-//                         currentRight->prev = next;
-//                         currentLeft->next = currentRight;
+// MAXSIZE 8
+// RED A 1
+// RED B 3
+// RED C 2
+// RED D 4
+// RED E 6
+// RED F 9
+// RED G 8
+// RED H 5
 
-//                         prev = currentLeft;
-//                         currentLeft = currentRight;
-//                         check=true;
-//                     } else {
-//                         customer*temp = next->prev;
-//                         customer *prevCurRight = currentRight->prev;
+// RED ABC 1
+// RED BCD 7
+// RED DS -8
+// RED GHW -2
+// RED AAA 7
+// RED GFD -1
+// RED GIM 2
+// RED ASD 15
 
-//                         next->prev = currentRight->prev;
-//                         if (prevCurRight == posOfChange) {
-//                             prevCurRight->prev = next;
-//                         } else {
-//                             prevCurRight->next = next;
-//                         }
-//                         next->next = currentRight->next;
-//                         next->next->prev = next;
+// LIGHT 3
+// LIGHT 0
 
-//                         currentLeft->next = currentRight;
-//                         currentLeft->prev = prev;
-//                         currentRight->prev = temp;
-//                         currentRight->next = currentLeft;
-//                         temp->next = currentRight;
-
-//                         prev = currentLeft;
-//                         currentLeft = currentRight;
-//                         currentRight = next->next;
-//                     }
-//                 }
-//             }while(currentLeft != posOfChange);
-//             posOfChange->prev = prev;
-//         }
+// PURPLE
