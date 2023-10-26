@@ -221,10 +221,13 @@ class imp_res : public Restaurant
             }
         }
 
-        void insort(customer*from, customer** to, int increase,int *timeSwap) {
-            for (customer* i=from; ;)  {
+        void insort(customer**from, customer** to, int increase,int *timeSwap) {
+            for (customer* i=*from; ;)  {
                 bool check = false;
                 for (customer* j=i; ; ) {
+                    cout<<endl;
+                    (*from)->print();
+                    LIGHT(0);
                     // y = j - incr
                     int y=0;
                     customer *compare = j;
@@ -232,7 +235,7 @@ class imp_res : public Restaurant
                         y++;
                         compare = compare->prev;
                         if (compare==nullptr) break;
-                        if (compare == from->prev) check = true;
+                        if (compare == (*from)->prev) check = true;
                     } while (y!=increase);
 
                     if (compare==nullptr) return;
@@ -246,10 +249,10 @@ class imp_res : public Restaurant
 
                     // if (j >= incr) && (arr[j] > arr[j-incr]) {
                     if (equalSwap||abs(j->energy) > abs(compare->energy)) {
-                        if (compare == from) {
-                            from = j;
-                        } else if (j == from) {
-                            from =compare;
+                        if (compare == *from) {
+                            *from = j;
+                        } else if (j == *from) {
+                            *from =compare;
                         }
                         if (j == *to) {
                             *to = compare;
@@ -311,13 +314,16 @@ class imp_res : public Restaurant
                 }
                 int j=0;
                 for (;j<i;) {
-                    insort(from,&maxAbs,i,&timeSwap);
+                    cout <<endl<< "outside from: ";
+                    from->print();
+                    insort(&from,&maxAbs,i,&timeSwap);
                     j++;
                     from = from->next;
+                    if (from == nullptr) break;
                 }
             }
-
-            insort(queue->next,&maxAbs,1,&timeSwap);
+            customer *from = queue->next;
+            insort(&from,&maxAbs,1,&timeSwap);
 
             cout << "SWAP TIMES: "<<timeSwap<<endl;
             
