@@ -225,9 +225,6 @@ class imp_res : public Restaurant
             for (customer* i=*from; ;)  {
                 bool check = false;
                 for (customer* j=i; ; ) {
-                    cout<<endl;
-                    (*from)->print();
-                    LIGHT(0);
                     // y = j - incr
                     int y=0;
                     customer *compare = j;
@@ -242,7 +239,9 @@ class imp_res : public Restaurant
 
                     bool equalSwap = false;
                     if (abs(j->energy) == abs(compare->energy)) {
-                        if (j->name[j->name.length()-1] < compare->name[compare->name.length()-1]) {
+                        string jorder = j->name.substr(j->name.length()-2,2);
+                        string compareorder = compare->name.substr(compare->name.length()-2,2);
+                        if (jorder < compareorder) {
                             equalSwap = true;
                         }
                     }
@@ -279,16 +278,18 @@ class imp_res : public Restaurant
 		{
 			cout << "PURPLE"<< endl;
             if (queue == nullptr) return ;
-            int max = 0,x=1,posMax = 1;
+            int max = 0,x=0,posMax = 1;
             customer*cur = queue,*maxAbs = queue;
             while (cur != nullptr) {
                 x++;
                 if (abs(cur->energy) >= max) {
                     max = abs(cur->energy);
                     maxAbs = cur;
-                    posMax = x;
+                    posMax = x+1;
                 }
-                cur->name = cur->name + to_string(x);
+                string temp = to_string(x);
+                if (temp.length() == 1) temp = "0" + temp;
+                cur->name = cur->name + temp;
                 cur = cur->next;
             }
             cout << "POS OF ABS MAX: " << posMax << endl; 
@@ -297,6 +298,7 @@ class imp_res : public Restaurant
                 cur = queue;
                 while (cur !=nullptr)
                 {
+                    cur->name.pop_back();
                     cur->name.pop_back();
                     cur = cur->next;
                 }
@@ -314,8 +316,6 @@ class imp_res : public Restaurant
                 }
                 int j=0;
                 for (;j<i;) {
-                    cout <<endl<< "outside from: ";
-                    from->print();
                     insort(&from,&maxAbs,i,&timeSwap);
                     j++;
                     from = from->next;
@@ -330,6 +330,7 @@ class imp_res : public Restaurant
             cur = queue;
             while (cur !=nullptr)
             {
+                cur->name.pop_back();
                 cur->name.pop_back();
                 cur = cur->next;
             }
